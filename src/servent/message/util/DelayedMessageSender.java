@@ -57,6 +57,9 @@ public class DelayedMessageSender implements Runnable {
 				oos.flush();
 				
 				sendSocket.close();
+
+
+				messageToSend.sendEffect();
 				
 
 		} catch (IOException e) {

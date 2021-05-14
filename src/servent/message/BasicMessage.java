@@ -244,9 +244,14 @@ public class BasicMessage implements Message {
 	 */
 	@Override
 	public void sendEffect() {
-		int amount = Integer.parseInt(getMessageText());
 
-		bitcakeManager.takeSomeBitcakes(amount);
+		if(type == MessageType.TRANSACTION){
+			int amount = Integer.parseInt(getMessageText());
+//			AppConfig.timestampedStandardPrint("send effect  " + amount);
+
+			bitcakeManager.takeSomeBitcakes(amount);
+		}
+
 	}
 
 	@Override

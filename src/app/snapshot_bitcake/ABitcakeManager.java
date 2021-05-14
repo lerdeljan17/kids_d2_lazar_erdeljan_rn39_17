@@ -36,6 +36,7 @@ public class ABitcakeManager implements BitcakeManager{
 
         ABSnapshotResult abSnapshotResult = new ABSnapshotResult(AppConfig.myServentInfo.getId(),currentBitcakeAmount);
         if (AppConfig.myServentInfo.getId() == clientMessage.getOriginalSenderInfo().getId()){
+            //dodam svoj rez
             snapshotCollector.addABSnapshotInfo(clientMessage.getOriginalSenderInfo().getId(),abSnapshotResult);
         }else {
             // TODO: 13.5.2021. broadcast tell message komsijama
@@ -53,7 +54,7 @@ public class ABitcakeManager implements BitcakeManager{
 
     public void doSnapshot() {
 
-        // TODO: 13.5.2021. init snap
+        // TODO: 13.5.2021. begin snap
         Map<Integer, Integer> myClock = new ConcurrentHashMap<>(CausalBroadcastShared.getVectorClock());
 
 
@@ -66,6 +67,8 @@ public class ABitcakeManager implements BitcakeManager{
         token.changeReceiver(AppConfig.myServentInfo.getId());
         MessageUtil.sendMessage(token);
         CausalBroadcastShared.commitCausalMessage(token);
+
+//        token.sendEffect();
 
     }
 

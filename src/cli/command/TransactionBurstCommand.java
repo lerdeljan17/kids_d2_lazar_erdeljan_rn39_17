@@ -59,7 +59,9 @@ public class TransactionBurstCommand implements CLICommand {
 				}
 				transactionMessage = transactionMessage.changeReceiver(AppConfig.myServentInfo.getId());
 				CausalBroadcastShared.commitCausalMessage(transactionMessage);
-				transactionMessage.sendEffect();
+//				CausalBroadcastShared.incrementClock(transactionMessage.getOriginalSenderInfo().getId());
+				// TODO: 14.5.2021. Mozda ne ovde, prebaceno u delayedMessSend
+//				transactionMessage.sendEffect();
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package servent.message;
 
+import app.AppConfig;
 import app.ServentInfo;
 import app.snapshot_bitcake.BitcakeManager;
 
@@ -35,7 +36,8 @@ public class TransactionMessage extends BasicMessage {
 	@Override
 	public void sendEffect() {
 		int amount = Integer.parseInt(getMessageText());
-		
+		AppConfig.timestampedStandardPrint("send effect  " + amount);
+
 		bitcakeManager.takeSomeBitcakes(amount);
 
 	}

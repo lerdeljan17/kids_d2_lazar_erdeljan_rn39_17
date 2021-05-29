@@ -17,6 +17,7 @@ public class ABTellAmountMessage extends BasicMessage {
         super(MessageType.AB_TELL_AMOUNT, originalSenderInfo, receiverInfo);
         super.setSnapshotResult(snapshotResult);
         super.snapshotInitiatorId = initId;
+
     }
 
 }

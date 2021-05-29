@@ -2,7 +2,6 @@ package app.snapshot_bitcake;
 
 import app.AppConfig;
 import app.CausalBroadcastShared;
-import app.ServentInfo;
 import servent.message.Message;
 import servent.message.TokenMessage;
 import servent.message.snapshot.ABTellAmountMessage;
@@ -34,13 +33,13 @@ public class ABitcakeManager implements BitcakeManager{
 
     public void handleToken(Message clientMessage, SnapshotCollector snapshotCollector, int currentBitcakeAmount) {
 
-        ABSnapshotResult abSnapshotResult = new ABSnapshotResult(AppConfig.myServentInfo.getId(),currentBitcakeAmount);
+        ABSnapshotResult snapshotResult = new ABSnapshotResult(AppConfig.myServentInfo.getId(),currentBitcakeAmount);
         if (AppConfig.myServentInfo.getId() == clientMessage.getOriginalSenderInfo().getId()){
             //dodam svoj rez
-            snapshotCollector.addABSnapshotInfo(clientMessage.getOriginalSenderInfo().getId(),abSnapshotResult);
+            snapshotCollector.addABSnapshotInfo(clientMessage.getOriginalSenderInfo().getId(),snapshotResult);
         }else {
             // TODO: 13.5.2021. broadcast tell message komsijama
-            Message tellMessage = new ABTellAmountMessage(AppConfig.myServentInfo,null,abSnapshotResult,clientMessage.getOriginalSenderInfo().getId());
+            Message tellMessage = new ABTellAmountMessage(AppConfig.myServentInfo,null,snapshotResult,clientMessage.getOriginalSenderInfo().getId());
             for(Integer neighbor:AppConfig.myServentInfo.getNeighbors()) {
 
                 tellMessage = tellMessage.changeReceiver(neighbor);

@@ -4,6 +4,7 @@ import app.AppConfig;
 import app.CausalBroadcastShared;
 import app.ServentInfo;
 import app.snapshot_bitcake.BitcakeManager;
+import servent.handler.TransactionHandler;
 import servent.message.BasicMessage;
 import servent.message.Message;
 import servent.message.TransactionMessage;
@@ -57,11 +58,16 @@ public class TransactionBurstCommand implements CLICommand {
 					
 					MessageUtil.sendMessage(transactionMessage);
 				}
-				transactionMessage = transactionMessage.changeReceiver(AppConfig.myServentInfo.getId());
-				CausalBroadcastShared.commitCausalMessage(transactionMessage);
+
+//				transactionMessage = transactionMessage.changeReceiver(AppConfig.myServentInfo.getId());
+//				CausalBroadcastShared.commitCausalMessage(transactionMessage);
+//				CausalBroadcastShared.addPendingMessage(transactionMessage);
+//				CausalBroadcastShared.checkPendingMessages();
+//				TransactionHandler.receivedBroadcasts.add(transactionMessage);
 //				CausalBroadcastShared.incrementClock(transactionMessage.getOriginalSenderInfo().getId());
 				// TODO: 14.5.2021. Mozda ne ovde, prebaceno u delayedMessSend
 //				transactionMessage.sendEffect();
+				CausalBroadcastShared.incrementClock(AppConfig.myServentInfo.getId());
 			}
 		}
 	}

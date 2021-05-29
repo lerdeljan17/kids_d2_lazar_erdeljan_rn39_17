@@ -131,9 +131,15 @@ public class SnapshotCollectorWorker implements SnapshotCollector {
 					AppConfig.timestampedStandardPrint(
 							"Info for " + itemAmount.getKey() + " = " + itemAmount.getValue().getRecordedAmount() + " bitcake");
 				}
-				
+
+
+				sum += sumABChannel();
+
+
+
 				AppConfig.timestampedStandardPrint("System bitcake count: " + sum);
-				
+
+
 				collectedABValues.clear(); //reset for next invocation
 				break;
 
@@ -144,6 +150,30 @@ public class SnapshotCollectorWorker implements SnapshotCollector {
 			collecting.set(false);
 		}
 
+	}
+
+	private int sumABChannel(){
+		int sum=0;
+		for (int i = 0; i < AppConfig.getServentCount(); i++) {
+			for (int j = 0; j < AppConfig.getServentCount(); j++) {
+				if (i!=j){
+					if (AppConfig.getInfoById(i).getNeighbors().contains(j)){
+						int lower = collectedABValues.get(i).getSENT().get(j).size();
+						AppConfig.timestampedErrorPrint("i = " + i + "  j = " + j + " primio " + collectedABValues.get(j).getRECD().get(i));
+						AppConfig.timestampedErrorPrint(collectedABValues.toString());
+						int upper = collectedABValues.get(j).getRECD().get(i).size();
+
+						for (int k = upper+1; k <=lower; k++) {
+							int add = collectedABValues.get(i).getSENT().get(j).get(k);
+							sum+=add;
+
+
+						}
+					}
+				}
+			}
+		}
+		return sum;
 	}
 	
 	@Override

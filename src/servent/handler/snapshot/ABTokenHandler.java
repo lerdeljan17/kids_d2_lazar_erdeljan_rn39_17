@@ -29,23 +29,23 @@ public class ABTokenHandler implements MessageHandler {
 
         //Sanity check.
         if (clientMessage.getMessageType() == MessageType.AB_TOKEN) {
-            ServentInfo senderInfo = clientMessage.getOriginalSenderInfo();
-            ServentInfo lastSenderInfo = clientMessage.getRoute().size() == 0 ?
-                    clientMessage.getOriginalSenderInfo() :
-                    clientMessage.getRoute().get(clientMessage.getRoute().size()-1);
+//            ServentInfo senderInfo = clientMessage.getOriginalSenderInfo();
+//            ServentInfo lastSenderInfo = clientMessage.getRoute().size() == 0 ?
+//                    clientMessage.getOriginalSenderInfo() :
+//                    clientMessage.getRoute().get(clientMessage.getRoute().size()-1);
+//
+//            /*
+//             * The standard read message already prints out that we got a msg.
+//             * However, we also want to see who sent this to us directly, besides from
+//             * seeing the original owner - if we are not in a clique, this might
+//             * not be the same node.
+//             */
+//            String text = String.format("Got %s from %s broadcast by %s",
+//                    clientMessage.getMessageText(), lastSenderInfo, senderInfo);
 
-            /*
-             * The standard read message already prints out that we got a msg.
-             * However, we also want to see who sent this to us directly, besides from
-             * seeing the original owner - if we are not in a clique, this might
-             * not be the same node.
-             */
-            String text = String.format("Got %s from %s broadcast by %s",
-                    clientMessage.getMessageText(), lastSenderInfo, senderInfo);
+//            AppConfig.timestampedStandardPrint(text);
 
-            AppConfig.timestampedStandardPrint(text);
-
-            if (senderInfo.getId() == AppConfig.myServentInfo.getId()) {
+            if (clientMessage.getOriginalSenderInfo().getId() == AppConfig.myServentInfo.getId()) {
                 //We are the sender :o someone bounced this back to us. /ignore
                 AppConfig.timestampedStandardPrint("Got own message back. No rebroadcast.");
             } else {
@@ -54,6 +54,8 @@ public class ABTokenHandler implements MessageHandler {
 
                 if (didPut) {
                     //New message for us. Rebroadcast it.
+                    // TODO: 14.5.2021. set bitcake mozda
+                    clientMessage.setBitcakeManager(clientMessage.getBitcakeManager());
 
                     CausalBroadcastShared.addPendingMessage(clientMessage);
                     CausalBroadcastShared.checkPendingMessages();

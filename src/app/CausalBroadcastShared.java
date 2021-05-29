@@ -28,7 +28,13 @@ public class CausalBroadcastShared {
 	public static BlockingQueue<Message> commitedCausalMessageList = new LinkedBlockingQueue<>();
 	public static Queue<Message> pendingMessages = new ConcurrentLinkedQueue<>();
 	public static Object pendingMessagesLock = new Object();
-	
+
+	public static Map<Integer,List<Integer>> SENT = new ConcurrentHashMap<>();
+	public static Map<Integer,List<Integer>> RECD = new ConcurrentHashMap<>();
+
+	public static Object SLock = new Object();
+	public static Object RLock = new Object();
+
 	public static void initializeVectorClock(int serventCount) {
 		for(int i = 0; i < serventCount; i++) {
 			vectorClock.put(i, 0);

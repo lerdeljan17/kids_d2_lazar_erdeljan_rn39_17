@@ -24,8 +24,11 @@ public class ABTellMessageHandler implements MessageHandler {
 
         if (clientMessage.getMessageType() == MessageType.AB_TELL_AMOUNT){
             boolean didPut = TransactionHandler.receivedBroadcasts.add(clientMessage);
+//            if(AppConfig.myServentInfo.getId() == 3){
+//                AppConfig.timestampedErrorPrint(TransactionHandler.receivedBroadcasts.toString() + " lista " + didPut + " poruka " +
+//                        clientMessage);
+//            }
             if (didPut){
-
                 if (AppConfig.myServentInfo.getId() == clientMessage.getSnapshotInitiatorId()){
                     snapshotCollector.addABSnapshotInfo(clientMessage.getOriginalSenderInfo().getId(), clientMessage.getSnapshotResult());
                 }else {
@@ -34,6 +37,7 @@ public class ABTellMessageHandler implements MessageHandler {
                         MessageUtil.sendMessage(clientMessage);
                     }
                 }
+
 
             }else {
                 AppConfig.timestampedStandardPrint("No rebroadcast, seen this message");

@@ -3,10 +3,16 @@ package servent.message.util;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import app.AppConfig;
+import app.CausalBroadcastShared;
 import app.ServentInfo;
+import app.snapshot_bitcake.SnapshotType;
 import servent.message.Message;
+import servent.message.MessageType;
 
 /**
  * This worker sends a message asynchronously. Doing this in a separate thread
@@ -50,20 +56,45 @@ public class DelayedMessageSender implements Runnable {
 			 * to override setRedColor() because of this.
 			 */
 
-				Socket sendSocket = new Socket(receiverInfo.getIpAddress(), receiverInfo.getListenerPort());
-				
-				ObjectOutputStream oos = new ObjectOutputStream(sendSocket.getOutputStream());
-				oos.writeObject(messageToSend);
-				oos.flush();
-				
-				sendSocket.close();
+			Socket sendSocket = new Socket(receiverInfo.getIpAddress(), receiverInfo.getListenerPort());
 
+			ObjectOutputStream oos = new ObjectOutputStream(sendSocket.getOutputStream());
+			oos.writeObject(messageToSend);
+			oos.flush();
+
+			sendSocket.close();
+
+			// TODO: 14.5.2021. deo za AB kad se salje poruka
+			if (AppConfig.SNAPSHOT_TYPE == SnapshotType.AB){
+
+					synchronized (CausalBroadcastShared.SLock) {
+						if (messageToSend.getMessageType() == MessageType.TRANSACTION) {
+						try {
+							if (!CausalBroadcastShared.SENT.containsKey(messageToSend.getReceiverInfo().getId())) {
+								List<Integer> toAdd = new ArrayList<>();
+								toAdd.add(Integer.parseInt(messageToSend.getMessageText()));
+								CausalBroadcastShared.SENT.put(messageToSend.getReceiverInfo().getId(), toAdd);
+
+							} else {
+								CausalBroadcastShared.SENT.get(messageToSend.getReceiverInfo().getId()).add(Integer.parseInt(messageToSend.getMessageText()));
+							}
+
+						} catch (Exception e) {
+							AppConfig.timestampedErrorPrint(e.getMessage() + Arrays.toString(e.getStackTrace()));
+						}
+
+
+					}
+
+
+				}
+		}
 
 				messageToSend.sendEffect();
 				
 
 		} catch (IOException e) {
-			AppConfig.timestampedErrorPrint("Couldn't send message: " + messageToSend.toString());
+			AppConfig.timestampedErrorPrint("Couldn't send message: " + messageToSend.toString() + e.getMessage() + " " + Arrays.toString(e.getStackTrace()));
 		}
 	}
 	

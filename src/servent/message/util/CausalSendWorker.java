@@ -26,7 +26,8 @@ public class CausalSendWorker implements Runnable, Cancellable {
     @Override
     public void stop() {
         try {
-           CausalBroadcastShared.commitCausalMessage(new PoisonMessage());
+//           CausalBroadcastShared.commitCausalMessage(new PoisonMessage());
+            CausalBroadcastShared.commitedCausalMessageList.add(new PoisonMessage());
         } catch (Exception e) {
             AppConfig.timestampedErrorPrint(e.getMessage() + Arrays.toString(e.getStackTrace()));
         }
@@ -40,12 +41,19 @@ public class CausalSendWorker implements Runnable, Cancellable {
 
                 Message message = CausalBroadcastShared.commitedCausalMessageList.take();
 
+
                 if (message.getMessageType() == MessageType.POISON)
                     break;
 
 
                 if (message.getMessageType() == MessageType.TRANSACTION){
+//                    AppConfig.timestampedErrorPrint("uso u if");
+//                    if (message.getReceiverInfo().getId() == AppConfig.myServentInfo.getId()){
+//                        AppConfig.timestampedErrorPrint("isti su");
+//                        continue;
+//                    }
                     if (message.getReceiverInfo().getId() == AppConfig.myServentInfo.getId()){
+//                    AppConfig.timestampedErrorPrint(" trnas mess iz csw " + message.getReceiverInfo() + " my: " + AppConfig.myServentInfo);
                         TransactionHandler.handleTransaction(message);
                     }
                 }

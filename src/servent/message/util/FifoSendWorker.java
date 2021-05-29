@@ -77,7 +77,7 @@ public class FifoSendWorker implements Runnable, Cancellable {
 					oos.writeObject(messageToSend);
 					oos.flush();
 					
-					messageToSend.sendEffect();
+//					messageToSend.sendEffect();
 				}
 				
 				ObjectInputStream ois = new ObjectInputStream(sendSocket.getInputStream());
